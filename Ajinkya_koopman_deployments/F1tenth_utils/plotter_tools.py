@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from F1tenth_utils import lift_states
+
 def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
     '''
     X is the list of trajectories
