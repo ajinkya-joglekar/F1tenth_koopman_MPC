@@ -1,7 +1,7 @@
 import numpy as np
 def lift_states(X):
     # np.seterr(invalid='ignore')
-    z_lift = np.zeros([12,X.shape[0]+1])
+    z_lift = np.zeros([21,X.shape[0]])
     for i in range(X.shape[0]):
         data =  X[i,:]
         x1 = data[0]
@@ -17,14 +17,14 @@ def lift_states(X):
         t8 = np.multiply(t2,x3)
         t9 = np.multiply(t3,x3)
         t10 = np.multiply(t2,t4)
-        # t11 = np.multiply(t2,t5)
-        # t13 = np.multiply(t2,t7)
+        t11 = np.multiply(t2,t5)
+        t13 = np.multiply(t2,t7)
         t14 = np.multiply(t3,t4)
-        # t15 = np.multiply(t3,t5)
-        # t17 = np.multiply(t3,t7)
-        # t12 = np.multiply(t2,t6)
-        # t16 = np.multiply(t3,t6)
-        D = np.array([1.0,x1,x2,x3,x4,t4,t2,t3,t8,t9,t10,t14]).T
+        t15 = np.multiply(t3,t5)
+        t17 = np.multiply(t3,t7)
+        t12 = np.multiply(t2,t6)
+        t16 = np.multiply(t3,t6)
+        D = np.array([1.0,x1,x2,x3,x4,t2,t3,t4,t5,t7,t6,t8,t10,t11,t13,t12,t9,t14,t15,t17,t16]).T
         # print(D.shape)
         z_lift[:,i] = D
         # z_lift.reshape(17,-1)

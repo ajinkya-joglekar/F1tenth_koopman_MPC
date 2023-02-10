@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from F1tenth_utils import lift_states
+from F1tenth_utils import open_loop_response
+import importlib
+importlib.reload(open_loop_response)
 
 def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
     '''
@@ -29,7 +32,9 @@ def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
         # y_lift_test = zt_1[:,traj_points[i-1]:traj_points[i]]
         x_lift_test = zt[:,count:count+traj_points[i]]
         u_test = U[count:count+traj_points[i],:].T
-        y_lifted = A@x_lift_test + B@u_test
+        # print(x_lift_test.shape,u_test.shape,A.shape,B.shape)
+        y_lifted = open_loop_response.simulate_ol(A,B,x_lift_test,u_test)
+        # y_lifted = A@x_lift_test + B@u_test
         count += traj_points[i]
         # print('Koopman prediction and data comparison for run %d'%(i))
 
