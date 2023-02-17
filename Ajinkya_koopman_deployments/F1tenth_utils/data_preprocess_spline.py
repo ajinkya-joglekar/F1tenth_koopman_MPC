@@ -17,6 +17,7 @@ def preprocess(dir):
     U = []
     T_diff_states = []
     T_diff_inputs = []
+    f_name = []
 
 
     for file in os.listdir(dir):
@@ -85,15 +86,18 @@ def preprocess(dir):
             U.append(u_train_[:-1,:]) # Disregarding the last control input
             T_diff_states.append(t_diff_states)
             T_diff_inputs.append(t_diff_inputs)
+            f_name.append(file)
 
     order_ = np.arange(0, len(X))
     random.shuffle(order_)
     X_shuffle = [X[i] for i in order_]
     Y_shuffle = [Y[i] for i in order_]
     U_shuffle = [U[i] for i in order_]
+    f_name_shuffle = [f_name[i] for i in order_]
+    print(f_name_shuffle)
     T_diff_states_shuffle = [T_diff_states[i] for i in order_]
     T_diff_inputs_shuffle = [T_diff_inputs[i] for i in order_]
 
 
-    return X_shuffle, Y_shuffle, U_shuffle, T_diff_states_shuffle,T_diff_inputs_shuffle
+    return X_shuffle, Y_shuffle, U_shuffle, T_diff_states_shuffle,T_diff_inputs_shuffle,f_name_shuffle
 

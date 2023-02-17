@@ -33,7 +33,7 @@ def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
         count += traj_points[i]
         # print('Koopman prediction and data comparison for run %d'%(i))
 
-        subfigs[i-1].suptitle('Koopman prediction and data comparison for %s %d'%(run_name,i), fontsize=16)
+        subfigs[i-1].suptitle('Koopman prediction and data comparison for %s %d'%(run_name[i-1]), fontsize=16)
         axs[0].plot(y_lifted[1,:], 'b')
         axs[0].plot(X[i-1][1:,0],'--k', label='X actual')
         axs[0].set_title('Predicted X v/s True value')
