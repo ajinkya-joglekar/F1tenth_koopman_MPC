@@ -17,7 +17,7 @@ def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
     X0 = np.vstack(X)
     U = np.vstack(U)
     zt = lift_states.lift_states(X0)
-
+    # print(A.shape,B.shape)
 
     traj_points = [x.shape[0] for x in X]
     traj_points.insert(0,0)
