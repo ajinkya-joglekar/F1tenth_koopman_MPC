@@ -54,7 +54,7 @@ def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
         axs[2].plot(y_lifted[4,:], 'b', label='Theta predicted')
         axs[2].plot(X[i-1][1:,3],'--k',label='Theta actual')
         axs[2].set_title('Predicted Theta v/s True value')
-        axs[2].set(ylabel=r'$\phi$',xlabel=r'$t$')
+        axs[2].set(ylabel=r'$\theta$',xlabel=r'$t$')
         axs[2].legend(['Theta_predicted','Theta_actual'])
 
     if not op_file_name== None:

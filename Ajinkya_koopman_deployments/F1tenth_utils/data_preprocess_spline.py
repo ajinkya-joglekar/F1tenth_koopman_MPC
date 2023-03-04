@@ -23,6 +23,7 @@ def preprocess(dir,plot_data=False):
 
 
     for file in os.listdir(dir):
+        # print('Processing file:',file)
         filename = os.path.join(dir, file)
         data = spio.loadmat(filename, squeeze_me=False)
         inputs = data['updated_data']['inputs'].item()
@@ -42,7 +43,7 @@ def preprocess(dir,plot_data=False):
         t_diff_inputs = np.array(t_diff_inputs)
 
         if t_diff_states.shape[0] > 40:
-            # print('Processing file',file)
+            print('Processing file',file)
             # dist = []
             # for i in range(1, states.shape[0]):
             #     dist_ = np.sqrt((states[i, 0] - states[i-1, 0]) ** 2 + (states[i, 1] - states[i-1, 1]) ** 2)/0.1
@@ -62,12 +63,12 @@ def preprocess(dir,plot_data=False):
             # Spline based sampling for X
             # print(t_diff_states.shape,states.shape)
             spl_x = UnivariateSpline(t_diff_states, states[1:,0].T)
-            spl_x.set_smoothing_factor(0.1) # Set the smoothing factor
+            spl_x.set_smoothing_factor(0.05) # Set the smoothing factor
             xs = spl_x(ts_states_spline) # Get the sampled x
             # print(xs.shape)
             # Spline based sampling for Y
             spl_y = UnivariateSpline(t_diff_states, states[1:,1].T)
-            spl_y.set_smoothing_factor(0.1) # Set the smoothing factor
+            spl_y.set_smoothing_factor(0.05) # Set the smoothing factor
             ys = spl_y(ts_states_spline) # Get the sampled y
             # print(ys.shape)
             # Spline based sampling for V
