@@ -1,7 +1,7 @@
 # import matplotlib.pyplot as plt
-import matplotlib
+# import matplotlib
 from matplotlib import pyplot as plt
-matplotlib.use("TkAgg")
+# matplotlib.use("TkAgg")
 
 def plot_processed_data(X,X_orig,U,U_orig,T_diff_states,T_diff_ip,f_name):
 # Plot the data

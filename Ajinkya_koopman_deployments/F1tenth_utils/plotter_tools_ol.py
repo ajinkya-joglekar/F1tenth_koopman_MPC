@@ -63,3 +63,5 @@ def plot_lifted_predictions(X,A,B,U,run_name,op_file_name=None):
         print('Figure_saved')
     else:
         print('Figure name not provided for save file')
+
+    # plt.show()
