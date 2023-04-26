@@ -9,6 +9,7 @@ def plot_processed_data(X,X_orig,U,U_orig,T_diff_states,T_diff_ip,f_name):
     subfigs = fig.subfigures(len(X), 1)
 # fig, axs = plt.subplots(5, 1, tight_layout=True, figsize=(12, 8))
     for i in range(len(X)):
+        # print(f_name[i])
         T = T_diff_states[i]*10
         T_ip = T_diff_ip[i]*10
         axs = subfigs[i-1].subplots(1, 5)
@@ -17,8 +18,6 @@ def plot_processed_data(X,X_orig,U,U_orig,T_diff_states,T_diff_ip,f_name):
         x_orig = X_orig[i][:,0]
         y = X[i][:,1]
         y_orig = X_orig[i][:,1]
-        # if min(y) < -10:
-        #     print(f_name[i])
         phi = X[i][:,3]
         phi_orig = X_orig[i][:,2]
         vel = U[i][:,0]

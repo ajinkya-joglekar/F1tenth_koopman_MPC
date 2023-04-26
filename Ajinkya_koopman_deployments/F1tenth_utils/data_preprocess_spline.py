@@ -8,6 +8,9 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import UnivariateSpline
+from scipy.interpolate import CubicSpline
+from scipy.interpolate import CubicHermiteSpline
+from scipy.interpolate import PchipInterpolator
 
 random.seed(0)
 
@@ -39,36 +42,35 @@ def preprocess(dir,plot_data=False):
         # t_diff_= [states_ts[i + 1] - states_ts[0] for i in range(len(states_ts) - 1)]
         t_diff_inputs = [inputs_ts[i + 1] - inputs_ts[0] for i in range(len(inputs_ts) - 1)]
         # t_diff.insert(0,0)
+
         t_diff_states = np.array(t_diff_states)
         t_diff_inputs = np.array(t_diff_inputs)
 
-        if t_diff_states.shape[0] > 40:
+        if t_diff_states[-1] > 2:
             print('Processing file',file)
-            # dist = []
-            # for i in range(1, states.shape[0]):
-            #     dist_ = np.sqrt((states[i, 0] - states[i-1, 0]) ** 2 + (states[i, 1] - states[i-1, 1]) ** 2)/0.1
-            #     dist.append(dist_)
-            # dist = [np.sqrt((states[i, 0] - states[0, 0]) ** 2 + (states[i, 1] - states[0, 1]) ** 2) for i in range(1, states.shape[0])]
-            # dist = np.array(dist)
-            # vel = dist / t_diff_
-            # vel = np.insert(vel, 0, 0)
 
             #Spline based smoothing for states and control
-            states_ts_range = int(t_diff_states[-1] - t_diff_states[0])  # Number of samples to generate from the data
-            inputs_ts_range = int(t_diff_inputs[-1] - t_diff_inputs[0])
-            ts_states_spline = np.linspace(0, t_diff_states[-1], states_ts_range * 10)
-            ts_inputs_spline = np.linspace(0, t_diff_inputs[-1], inputs_ts_range * 10)
+            states_ts_range = round((t_diff_states[-1] - t_diff_states[0])*10)  # Number of samples to generate from the data
+            inputs_ts_range = round((t_diff_inputs[-1] - t_diff_inputs[0])*10)
+            # print(states_ts_range, inputs_ts_range)
+            ts_states_spline = np.linspace(t_diff_states[0], t_diff_states[-1], states_ts_range)
+            ts_inputs_spline = np.linspace(t_diff_inputs[0], t_diff_inputs[-1], inputs_ts_range)
 
             # Spline based sampling for all the states
             # Spline based sampling for X
             # print(t_diff_states.shape,states.shape)
-            spl_x = UnivariateSpline(t_diff_states, states[1:,0].T)
-            spl_x.set_smoothing_factor(0.05) # Set the smoothing factor
+            x_dot = np.diff(states[1:,0])/np.diff(t_diff_states)
+            x_dot = np.insert(x_dot, 0, 0)
+
+            # print(t_diff_states.shape,states[1:,0].shape,x_dot.shape)
+            spl_x = PchipInterpolator(t_diff_states, states[1:,0].T)
+            # spl_x.set_smoothing_factor(0) # Set the smoothing factor
             xs = spl_x(ts_states_spline) # Get the sampled x
             # print(xs.shape)
             # Spline based sampling for Y
-            spl_y = UnivariateSpline(t_diff_states, states[1:,1].T)
-            spl_y.set_smoothing_factor(0.05) # Set the smoothing factor
+            spl_y = PchipInterpolator(t_diff_states, states[1:, 1].T)
+            # spl_y = UnivariateSpline(t_diff_states, states[1:,1].T)
+            # spl_y.set_smoothing_factor(0) # Set the smoothing factor
             ys = spl_y(ts_states_spline) # Get the sampled y
             # print(ys.shape)
             # Spline based sampling for V
@@ -86,22 +88,22 @@ def preprocess(dir,plot_data=False):
             # vs = spl_v(ts_states_spline) # Get the sampled vel
 
             # Spline based sampling for Theta
-            spl_theta = UnivariateSpline(t_diff_states, states[1:,2].T)
-            spl_theta.set_smoothing_factor(0.05) # Set the smoothing factor
+            spl_theta = PchipInterpolator(t_diff_states, states[1:,2].T)
+            # spl_theta.set_smoothing_factor(0) # Set the smoothing factor
             theta_s = spl_theta(ts_states_spline) # Get the sampled theta
 
             # Spline based sampling for all control
             # Spline based sampling for v
-            spl_v_ip = UnivariateSpline(t_diff_inputs, inputs[1:,0].T)
-            spl_v_ip.set_smoothing_factor(0.2) # Set the smoothing factor
-            vp_ip_s = spl_v_ip(ts_inputs_spline) # Get the sampled vel input
+            spl_v_ip = PchipInterpolator(t_diff_inputs, inputs[1:,0].T)
+            # spl_v_ip.set_smoothing_factor(0.2) # Set the smoothing factor
+            vp_ip_s = spl_v_ip(ts_states_spline) # Get the sampled vel input
             # vp_ip_s[vp_ip_s>5] = 0
             # vp_ip_s[vp_ip_s<5] = 0
 
             #Spline based sampling for delta
-            spl_delta_ip = UnivariateSpline(t_diff_inputs, inputs[1:,1].T)
-            spl_delta_ip.set_smoothing_factor(0.01) # Set the smoothing factor
-            delta_ip_s = spl_delta_ip(ts_inputs_spline) # Get the sampled delta input
+            spl_delta_ip = PchipInterpolator(t_diff_inputs, inputs[1:,1].T)
+            # spl_delta_ip.set_smoothing_factor(0.01) # Set the smoothing factor
+            delta_ip_s = spl_delta_ip(ts_states_spline) # Get the sampled delta input
             # delta_ip_s[delta_ip_s<-2] = 0
             # delta_ip_s[delta_ip_s>2] = 0
 
